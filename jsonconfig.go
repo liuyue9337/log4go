@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/toolkits/file"
@@ -34,11 +35,12 @@ type FileConfig struct {
 	// Recommended: "[%D %T] [%C] [%L] (%S) %M"//
 	Pattern string `json:"pattern"`
 
-	Rotate   bool   `json:"rotate"`
-	Maxsize  string `json:"maxsize"`  // \d+[KMG]? Suffixes are in terms of 2**10
-	Maxlines string `json:"maxlines"` //\d+[KMG]? Suffixes are in terms of thousands
-	Daily    bool   `json:"daily"`    //Automatically rotates by day
-	Sanitize bool   `json:"sanitize"` //Sanitize newlines to prevent log injection
+	Rotate    bool   `json:"rotate"`
+	Maxsize   string `json:"maxsize"`   // \d+[KMG]? Suffixes are in terms of 2**10
+	Maxlines  string `json:"maxlines"`  //\d+[KMG]? Suffixes are in terms of thousands
+	Maxbackup string `json:"maxbackup"` // max backup filse，when daily is false
+	Daily     bool   `json:"daily"`     //Automatically rotates by day
+	Sanitize  bool   `json:"sanitize"`  //Sanitize newlines to prevent log injection
 }
 
 type SocketConfig struct {
@@ -166,6 +168,7 @@ func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool)
 	format := "[%D %T] [%C] [%L] (%S) %M"
 	maxlines := 0
 	maxsize := 0
+	maxbackup := 999
 	daily := false
 	rotate := false
 	sanitize := false
@@ -182,6 +185,12 @@ func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool)
 	if len(ff.Maxsize) > 0 {
 		maxsize = strToNumSuffix(strings.Trim(ff.Maxsize, " \r\n"), 1024)
 	}
+	if len(ff.Maxbackup) > 0 {
+		size, err := strconv.Atoi(ff.Maxbackup)
+		if err == nil && size > 0 {
+			maxbackup = size
+		}
+	}
 	daily = ff.Daily
 	rotate = ff.Rotate
 	sanitize = ff.Sanitize
@@ -190,7 +199,7 @@ func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool)
 		return nil, true
 	}
 
-	flw := NewFileLogWriter(file, rotate, daily)
+	flw := NewFileLogWriter(file, maxbackup, rotate, daily)
 	flw.SetFormat(format)
 	flw.SetRotateLines(maxlines)
 	flw.SetRotateSize(maxsize)
