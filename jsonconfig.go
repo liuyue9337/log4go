@@ -168,7 +168,7 @@ func jsonToFileLogWriter(filename string, ff *FileConfig) (*FileLogWriter, bool)
 	format := "[%D %T] [%C] [%L] (%S) %M"
 	maxlines := 0
 	maxsize := 0
-	maxbackup := 999
+	maxbackup := MAX_BACK_UP
 	daily := false
 	rotate := false
 	sanitize := false
