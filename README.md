@@ -59,6 +59,7 @@ Here is a Json config example:
         "rotate": true,				// whether rotate the log
         "maxsize": "500M",
         "maxlines": "10K",
+        "maxbackup": "10",          // number of backup files, valid when daily is false
         "daily": true,
         "sanitize": true
     }], 
