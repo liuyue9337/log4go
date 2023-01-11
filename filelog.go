@@ -185,6 +185,9 @@ func (w *FileLogWriter) intRotate() error {
 						os.Rename(fname, nfname)
 					}
 				}
+				if num == 0 {
+					fname = w.filename + fmt.Sprintf(".%d", num+1)
+				}
 				w.file.Close()
 				// Rename the file to its newfound home
 				err = os.Rename(w.filename, fname)
