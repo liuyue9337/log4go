@@ -25,11 +25,11 @@ Two new features are supported: one is Json config style, and the other is diffe
 
 First, get the code from this repo. 
 
-```go get github.com/jeanphorn/log4go```
+```go get github.com/liuyue9337/log4go```
 
 Then import it to your project.
 
-```import log "github.com/jeanphorn/log4go"```
+```import log "github.com/liuyue9337/log4go"```
 
 
 ## Examples
@@ -80,7 +80,7 @@ Code example:
 package main
 
 import (
-	log "github.com/jeanphorn/log4go"
+	log "github.com/liuyue9337/log4go"
 )
 
 func main() {
